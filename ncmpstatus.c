@@ -22,7 +22,6 @@ int main(int argc, char **argv) {
 	struct mpd_connection *conn;
 
 	conn = mpd_connection_new(NULL, 0, 30000);
-
 	if (mpd_connection_get_error(conn) != MPD_ERROR_SUCCESS) {
 		goto mpd_error;
 	}
@@ -64,14 +63,14 @@ int main(int argc, char **argv) {
 
 		while ((song = mpd_recv_song(conn)) != NULL) {
 			artist = mpd_song_get_tag(song, MPD_TAG_ARTIST, 0);
-			if (artist != NULL)
+			if (artist)
 				wprintf(L"%s\n", artist);
 
 			title = mpd_song_get_tag(song, MPD_TAG_TITLE, 0);
-			if (title != NULL)
+			if (title)
 				wprintf(L"%s\n", title);
 
-			if (artist == NULL && title == NULL)
+			if (!artist && !title)
 				wprintf(L"%s\n", mpd_song_get_uri(song));
 
 			mpd_song_free(song);
@@ -105,11 +104,7 @@ int main(int argc, char **argv) {
 		wprintf(L"■ Stopped\n");
 	}
 
-	if (mpd_connection_get_error(conn) != MPD_ERROR_SUCCESS) {
-		goto mpd_error;
-	}
-
-	if (!mpd_response_finish(conn)) {
+	if (mpd_connection_get_error(conn) != MPD_ERROR_SUCCESS || !mpd_response_finish(conn)) {
 		goto mpd_error;
 	}
 
