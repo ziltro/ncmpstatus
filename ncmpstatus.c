@@ -48,11 +48,11 @@ int main(int argc, char ** argv) {
 		    
 		if (mpd_status_get_state(status) == MPD_STATE_PLAY)
 		{
-			wprintf(L"Playing\n");
+			wprintf(L"▶ Playing\n");
 		}
 		if (mpd_status_get_state(status) == MPD_STATE_PAUSE)
 		{
-			wprintf(L"Paused\n");
+			wprintf(L"▝▝ Paused\n");
 		}
 		int timeTotal, timeElapsed, timeRemaining;
 		timeTotal = mpd_status_get_total_time(status);
@@ -106,7 +106,7 @@ int main(int argc, char ** argv) {
 		
 	}
 	else {
-		wprintf(L"Stopped\n");
+		wprintf(L"■ Stopped\n");
 	}
 
 	if (mpd_connection_get_error(conn) != MPD_ERROR_SUCCESS) {
