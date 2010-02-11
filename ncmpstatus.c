@@ -15,7 +15,7 @@
 #define SECS_PER_MINUTE 60
 #define SECS_PER_HOUR 3600
 
-int main(int argc, char ** argv) {
+int main(int argc, char **argv) {
 	setlocale(LC_ALL, "");
 
 	struct mpd_connection *conn;
@@ -28,7 +28,7 @@ int main(int argc, char ** argv) {
 		return -1;
 	}
 
-	struct mpd_status * status;
+	struct mpd_status *status;
 	struct mpd_song *song;
 
 	mpd_command_list_begin(conn, true);
@@ -46,12 +46,10 @@ int main(int argc, char ** argv) {
 	if (mpd_status_get_state(status) == MPD_STATE_PLAY ||
 	    mpd_status_get_state(status) == MPD_STATE_PAUSE) {
 		    
-		if (mpd_status_get_state(status) == MPD_STATE_PLAY)
-		{
+		if (mpd_status_get_state(status) == MPD_STATE_PLAY) {
 			wprintf(L"▶ Playing\n");
 		}
-		if (mpd_status_get_state(status) == MPD_STATE_PAUSE)
-		{
+		if (mpd_status_get_state(status) == MPD_STATE_PAUSE) {
 			wprintf(L"▝▝ Paused\n");
 		}
 		int timeTotal, timeElapsed, timeRemaining;
@@ -87,16 +85,14 @@ int main(int argc, char ** argv) {
 		char sTimeTotal[5];
 		char sTimeRemaining[5];
 
-		if (timeTotal >= SECS_PER_HOUR)
-		{
+		if (timeTotal >= SECS_PER_HOUR) {
 			sprintf(sTimeElapsed, "%02i:%02i:%02i", timeElapsed / SECS_PER_HOUR, (timeElapsed % SECS_PER_HOUR) / SECS_PER_MINUTE, timeElapsed % SECS_PER_MINUTE);
 			sprintf(sTimeTotal, "%02i:%02i:%02i", timeTotal / SECS_PER_HOUR, (timeTotal % SECS_PER_HOUR) / SECS_PER_MINUTE, timeTotal % SECS_PER_MINUTE);
 			sprintf(sTimeRemaining, "%02i:%02i:%02i", timeRemaining / SECS_PER_HOUR, (timeRemaining % SECS_PER_HOUR) / SECS_PER_MINUTE, timeRemaining % SECS_PER_MINUTE);
 			wprintf(L"Elapsed      Duration     Remaining\n");
 			wprintf(L"%s     %s     %s\n", sTimeElapsed, sTimeTotal, sTimeRemaining);
 		}
-		else
-		{
+		else {
 			sprintf(sTimeElapsed, "%02i:%02i", timeElapsed / SECS_PER_MINUTE, timeElapsed % SECS_PER_MINUTE);
 			sprintf(sTimeTotal, "%02i:%02i", timeTotal / SECS_PER_MINUTE, timeTotal % SECS_PER_MINUTE);
 			sprintf(sTimeRemaining, "%02i:%02i", timeRemaining / SECS_PER_MINUTE, timeRemaining % SECS_PER_MINUTE);
