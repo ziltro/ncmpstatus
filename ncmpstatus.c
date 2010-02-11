@@ -13,6 +13,11 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include <time.h>
+
+#define SECS_PER_MINUTE 60
+#define SECS_PER_HOUR 3600
+
 int main(int argc, char ** argv) {
 	struct mpd_connection *conn;
 
@@ -50,9 +55,10 @@ int main(int argc, char ** argv) {
 		{
 			printf("Paused\n");
 		}
-		int timeTotal, timeElapsed;
+		int timeTotal, timeElapsed, timeRemaining;
 		timeTotal = mpd_status_get_total_time(status);
 		timeElapsed = mpd_status_get_elapsed_time(status);
+		timeRemaining = timeTotal - timeElapsed;
 
 		mpd_response_next(conn);
 
@@ -77,8 +83,28 @@ int main(int argc, char ** argv) {
 		}
 
 		printf("\n");
+		
+		char sTimeElapsed[5];
+		char sTimeTotal[5];
+		char sTimeRemaining[5];
 
-		printf("%i   -   %i   -   %i\n", timeElapsed, timeTotal, timeTotal - timeElapsed);
+		if (timeTotal >= SECS_PER_HOUR)
+		{
+			sprintf(sTimeElapsed, "%02i:%02i:%02i", timeElapsed / SECS_PER_HOUR, (timeElapsed % SECS_PER_HOUR) / SECS_PER_MINUTE, timeElapsed % SECS_PER_MINUTE);
+			sprintf(sTimeTotal, "%02i:%02i:%02i", timeTotal / SECS_PER_HOUR, (timeTotal % SECS_PER_HOUR) / SECS_PER_MINUTE, timeTotal % SECS_PER_MINUTE);
+			sprintf(sTimeRemaining, "%02i:%02i:%02i", timeRemaining / SECS_PER_HOUR, (timeRemaining % SECS_PER_HOUR) / SECS_PER_MINUTE, timeRemaining % SECS_PER_MINUTE);
+			printf("Elapsed      Duration     Remaining\n");
+			printf("%s     %s     %s\n", sTimeElapsed, sTimeTotal, sTimeRemaining);
+		}
+		else
+		{
+			sprintf(sTimeElapsed, "%02i:%02i", timeElapsed / SECS_PER_MINUTE, timeElapsed % SECS_PER_MINUTE);
+			sprintf(sTimeTotal, "%02i:%02i", timeTotal / SECS_PER_MINUTE, timeTotal % SECS_PER_MINUTE);
+			sprintf(sTimeRemaining, "%02i:%02i", timeRemaining / SECS_PER_MINUTE, timeRemaining % SECS_PER_MINUTE);
+			printf("Elapsed   Duration  Remaining\n");
+			printf("%s     %s     %s\n", sTimeElapsed, sTimeTotal, sTimeRemaining);
+		}
+		
 	}
 	else {
 		printf("Stopped\n");
