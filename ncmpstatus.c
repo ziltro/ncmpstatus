@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
 	if (mpd_connection_get_error(conn) != MPD_ERROR_SUCCESS) {
 		fwprintf(stderr, L"%s\n", mpd_connection_get_error_message(conn));
 		mpd_connection_free(conn);
-		return -1;
+		return 1;
 	}
 
 	struct mpd_status *status;
@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 	if (status == NULL) {
 		fwprintf(stderr, L"%s\n", mpd_connection_get_error_message(conn));
 		mpd_connection_free(conn);
-		return -1;
+		return 1;
 	}
 	
 	state = mpd_status_get_state(status);
@@ -112,19 +112,13 @@ int main(int argc, char **argv) {
 	if (mpd_connection_get_error(conn) != MPD_ERROR_SUCCESS) {
 		fwprintf(stderr, L"%s\n", mpd_connection_get_error_message(conn));
 		mpd_connection_free(conn);
-		return -1;
-	}
-
-	if (mpd_connection_get_error(conn) != MPD_ERROR_SUCCESS) {
-		fwprintf(stderr, L"%s\n", mpd_connection_get_error_message(conn));
-		mpd_connection_free(conn);
-		return -1;
+		return 1;
 	}
 
 	if (!mpd_response_finish(conn)) {
 		fwprintf(stderr, L"%s\n", mpd_connection_get_error_message(conn));
 		mpd_connection_free(conn);
-		return -1;
+		return 1;
 	}
 
 	mpd_status_free(status);
