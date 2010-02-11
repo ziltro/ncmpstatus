@@ -11,9 +11,10 @@
 #include <locale.h>
 #include <stdio.h>
 #include <wchar.h>
+#include <stdlib.h>
 
 #define SECS_PER_MINUTE 60
-#define SECS_PER_HOUR 3600
+#define SECS_PER_HOUR (SECS_PER_MINUTE * 60)
 
 int main(int argc, char **argv) {
 	setlocale(LC_ALL, "");
@@ -81,27 +82,28 @@ int main(int argc, char **argv) {
 		}
 
 		wprintf(L"\n");
-		
-		//TODO: This will break horribly if the time is >= 100 hours.
-		char sTimeElapsed[5];
-		char sTimeTotal[5];
-		char sTimeRemaining[5];
+
+		char *sTimeElapsed;
+		char *sTimeTotal;
+		char *sTimeRemaining;
 
 		if (timeTotal >= SECS_PER_HOUR) {
-			sprintf(sTimeElapsed, "%02i:%02i:%02i", timeElapsed / SECS_PER_HOUR, (timeElapsed % SECS_PER_HOUR) / SECS_PER_MINUTE, timeElapsed % SECS_PER_MINUTE);
-			sprintf(sTimeTotal, "%02i:%02i:%02i", timeTotal / SECS_PER_HOUR, (timeTotal % SECS_PER_HOUR) / SECS_PER_MINUTE, timeTotal % SECS_PER_MINUTE);
-			sprintf(sTimeRemaining, "%02i:%02i:%02i", timeRemaining / SECS_PER_HOUR, (timeRemaining % SECS_PER_HOUR) / SECS_PER_MINUTE, timeRemaining % SECS_PER_MINUTE);
+			asprintf(&sTimeElapsed, "%02i:%02i:%02i", timeElapsed / SECS_PER_HOUR, (timeElapsed % SECS_PER_HOUR) / SECS_PER_MINUTE, timeElapsed % SECS_PER_MINUTE);
+			asprintf(&sTimeTotal, "%02i:%02i:%02i", timeTotal / SECS_PER_HOUR, (timeTotal % SECS_PER_HOUR) / SECS_PER_MINUTE, timeTotal % SECS_PER_MINUTE);
+			asprintf(&sTimeRemaining, "%02i:%02i:%02i", timeRemaining / SECS_PER_HOUR, (timeRemaining % SECS_PER_HOUR) / SECS_PER_MINUTE, timeRemaining % SECS_PER_MINUTE);
 			wprintf(L"Elapsed      Duration     Remaining\n");
 			wprintf(L"%s     %s     %s\n", sTimeElapsed, sTimeTotal, sTimeRemaining);
 		}
 		else {
-			sprintf(sTimeElapsed, "%02i:%02i", timeElapsed / SECS_PER_MINUTE, timeElapsed % SECS_PER_MINUTE);
-			sprintf(sTimeTotal, "%02i:%02i", timeTotal / SECS_PER_MINUTE, timeTotal % SECS_PER_MINUTE);
-			sprintf(sTimeRemaining, "%02i:%02i", timeRemaining / SECS_PER_MINUTE, timeRemaining % SECS_PER_MINUTE);
+			asprintf(&sTimeElapsed, "%02i:%02i", timeElapsed / SECS_PER_MINUTE, timeElapsed % SECS_PER_MINUTE);
+			asprintf(&sTimeTotal, "%02i:%02i", timeTotal / SECS_PER_MINUTE, timeTotal % SECS_PER_MINUTE);
+			asprintf(&sTimeRemaining, "%02i:%02i", timeRemaining / SECS_PER_MINUTE, timeRemaining % SECS_PER_MINUTE);
 			wprintf(L"Elapsed   Duration  Remaining\n");
 			wprintf(L"%s     %s     %s\n", sTimeElapsed, sTimeTotal, sTimeRemaining);
 		}
-		
+		free(sTimeElapsed);
+		free(sTimeTotal);
+		free(sTimeRemaining);
 	}
 	else {
 		wprintf(L"■ Stopped\n");
