@@ -82,6 +82,7 @@ int main(int argc, char **argv) {
 
 		wprintf(L"\n");
 		
+		//TODO: This will break horribly if the time is >= 100 hours.
 		char sTimeElapsed[5];
 		char sTimeTotal[5];
 		char sTimeRemaining[5];
