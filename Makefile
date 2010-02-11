@@ -21,5 +21,5 @@ $(EXECUTABLE): $(OBJECTS)
 #	ncmpstatus
 #
 clean:
-	rm -f ncmpstatus
+	rm -f ncmpstatus ncmpstatus.o
 
