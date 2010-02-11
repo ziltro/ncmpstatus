@@ -47,10 +47,10 @@ int main(int argc, char **argv) {
 	state = mpd_status_get_state(status);
 
 	if (state == MPD_STATE_PLAY || state == MPD_STATE_PAUSE) {
-		if (mpd_status_get_state(status) == MPD_STATE_PLAY) {
+		if (state == MPD_STATE_PLAY) {
 			wprintf(L"▶ Playing\n");
 		}
-		if (mpd_status_get_state(status) == MPD_STATE_PAUSE) {
+		if (state == MPD_STATE_PAUSE) {
 			wprintf(L"▝▝ Paused\n");
 		}
 		int timeTotal, timeElapsed, timeRemaining;
