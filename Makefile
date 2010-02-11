@@ -13,13 +13,6 @@ $(EXECUTABLE): $(OBJECTS)
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@
 
-
-#ncmpstatus:
-#	gcc -Wall -lmpdclient ncmpstatus.c -o ncmpstatus
-#
-#all:
-#	ncmpstatus
-#
 clean:
 	rm -f ncmpstatus ncmpstatus.o
 
