@@ -8,23 +8,22 @@
 #include <mpd/search.h>
 #include <mpd/tag.h>
 
+#include <locale.h>
 #include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
-
-#include <time.h>
+#include <wchar.h>
 
 #define SECS_PER_MINUTE 60
 #define SECS_PER_HOUR 3600
 
 int main(int argc, char ** argv) {
+	setlocale(LC_ALL, "");
+
 	struct mpd_connection *conn;
 
 	conn = mpd_connection_new(NULL, 0, 30000);
 
 	if (mpd_connection_get_error(conn) != MPD_ERROR_SUCCESS) {
-		fprintf(stderr,"%s\n", mpd_connection_get_error_message(conn));
+		fwprintf(stderr, L"%s\n", mpd_connection_get_error_message(conn));
 		mpd_connection_free(conn);
 		return -1;
 	}
@@ -39,7 +38,7 @@ int main(int argc, char ** argv) {
 
 	status = mpd_recv_status(conn);
 	if (status == NULL) {
-		fprintf(stderr,"%s\n", mpd_connection_get_error_message(conn));
+		fwprintf(stderr, L"%s\n", mpd_connection_get_error_message(conn));
 		mpd_connection_free(conn);
 		return -1;
 	}
@@ -49,11 +48,11 @@ int main(int argc, char ** argv) {
 		    
 		if (mpd_status_get_state(status) == MPD_STATE_PLAY)
 		{
-			printf("Playing\n");
+			wprintf(L"Playing\n");
 		}
 		if (mpd_status_get_state(status) == MPD_STATE_PAUSE)
 		{
-			printf("Paused\n");
+			wprintf(L"Paused\n");
 		}
 		int timeTotal, timeElapsed, timeRemaining;
 		timeTotal = mpd_status_get_total_time(status);
@@ -65,24 +64,24 @@ int main(int argc, char ** argv) {
 		const char *artist;
 		const char *title;
 
-		printf("\n");
+		wprintf(L"\n");
 
 		while ((song = mpd_recv_song(conn)) != NULL) {
 			artist = mpd_song_get_tag(song, MPD_TAG_ARTIST, 0);
 			if (artist != NULL)
-				printf("%s\n", artist);
+				wprintf(L"%s\n", artist);
 
 			title = mpd_song_get_tag(song, MPD_TAG_TITLE, 0);
 			if (title != NULL)
-				printf("%s\n", title);
+				wprintf(L"%s\n", title);
 
 			if (artist == NULL && title == NULL)
-				printf("%s\n", mpd_song_get_uri(song));
+				wprintf(L"%s\n", mpd_song_get_uri(song));
 
 			mpd_song_free(song);
 		}
 
-		printf("\n");
+		wprintf(L"\n");
 		
 		char sTimeElapsed[5];
 		char sTimeTotal[5];
@@ -93,37 +92,37 @@ int main(int argc, char ** argv) {
 			sprintf(sTimeElapsed, "%02i:%02i:%02i", timeElapsed / SECS_PER_HOUR, (timeElapsed % SECS_PER_HOUR) / SECS_PER_MINUTE, timeElapsed % SECS_PER_MINUTE);
 			sprintf(sTimeTotal, "%02i:%02i:%02i", timeTotal / SECS_PER_HOUR, (timeTotal % SECS_PER_HOUR) / SECS_PER_MINUTE, timeTotal % SECS_PER_MINUTE);
 			sprintf(sTimeRemaining, "%02i:%02i:%02i", timeRemaining / SECS_PER_HOUR, (timeRemaining % SECS_PER_HOUR) / SECS_PER_MINUTE, timeRemaining % SECS_PER_MINUTE);
-			printf("Elapsed      Duration     Remaining\n");
-			printf("%s     %s     %s\n", sTimeElapsed, sTimeTotal, sTimeRemaining);
+			wprintf(L"Elapsed      Duration     Remaining\n");
+			wprintf(L"%s     %s     %s\n", sTimeElapsed, sTimeTotal, sTimeRemaining);
 		}
 		else
 		{
 			sprintf(sTimeElapsed, "%02i:%02i", timeElapsed / SECS_PER_MINUTE, timeElapsed % SECS_PER_MINUTE);
 			sprintf(sTimeTotal, "%02i:%02i", timeTotal / SECS_PER_MINUTE, timeTotal % SECS_PER_MINUTE);
 			sprintf(sTimeRemaining, "%02i:%02i", timeRemaining / SECS_PER_MINUTE, timeRemaining % SECS_PER_MINUTE);
-			printf("Elapsed   Duration  Remaining\n");
-			printf("%s     %s     %s\n", sTimeElapsed, sTimeTotal, sTimeRemaining);
+			wprintf(L"Elapsed   Duration  Remaining\n");
+			wprintf(L"%s     %s     %s\n", sTimeElapsed, sTimeTotal, sTimeRemaining);
 		}
 		
 	}
 	else {
-		printf("Stopped\n");
+		wprintf(L"Stopped\n");
 	}
 
 	if (mpd_connection_get_error(conn) != MPD_ERROR_SUCCESS) {
-		fprintf(stderr,"%s\n", mpd_connection_get_error_message(conn));
+		fwprintf(stderr, L"%s\n", mpd_connection_get_error_message(conn));
 		mpd_connection_free(conn);
 		return -1;
 	}
 
 	if (mpd_connection_get_error(conn) != MPD_ERROR_SUCCESS) {
-		fprintf(stderr,"%s\n", mpd_connection_get_error_message(conn));
+		fwprintf(stderr, L"%s\n", mpd_connection_get_error_message(conn));
 		mpd_connection_free(conn);
 		return -1;
 	}
 
 	if (!mpd_response_finish(conn)) {
-		fprintf(stderr,"%s\n", mpd_connection_get_error_message(conn));
+		fwprintf(stderr, L"%s\n", mpd_connection_get_error_message(conn));
 		mpd_connection_free(conn);
 		return -1;
 	}
