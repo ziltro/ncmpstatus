@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-c -Wall -std=gnu99
+CFLAGS=-c -Wall -std=gnu99 -D_GNU_SOURCE
 LDFLAGS=-lmpdclient
 SOURCES=ncmpstatus.c
 OBJECTS=$(SOURCES:.c=.o)
