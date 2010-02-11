@@ -30,6 +30,7 @@ int main(int argc, char **argv) {
 
 	struct mpd_status *status;
 	struct mpd_song *song;
+	enum mpd_state state;
 
 	mpd_command_list_begin(conn, true);
 	mpd_send_status(conn);
@@ -42,10 +43,10 @@ int main(int argc, char **argv) {
 		mpd_connection_free(conn);
 		return -1;
 	}
+	
+	state = mpd_status_get_state(status);
 
-	if (mpd_status_get_state(status) == MPD_STATE_PLAY ||
-	    mpd_status_get_state(status) == MPD_STATE_PAUSE) {
-		    
+	if (state == MPD_STATE_PLAY || state == MPD_STATE_PAUSE) {
 		if (mpd_status_get_state(status) == MPD_STATE_PLAY) {
 			wprintf(L"▶ Playing\n");
 		}
